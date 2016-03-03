@@ -1,0 +1,43 @@
+<!--
+@license
+Copyright (c) 2015 Powerscombined LLC. All rights reserved.
+This code may only be used under the BSD style license found at https://streamfun.firebaseapp.com/LICENSE.txt
+-->
+<link rel="import" href="//powco.firebaseapp.com/bower_components/polymer/polymer.html">
+<link rel="import" href="../powco-data/powco-data.html">
+<link rel="import" href="../powco-form/powco-form.html">
+<link rel="import" href="../powco-interface/powco-behavior.html">
+<link rel="import" href="//powco.firebaseapp.com/bower_components/paper-button/paper-button.html">
+<link rel="import" href="//powco.firebaseapp.com/bower_components/paper-input/paper-input.html">
+
+<!--
+`<streamfun-page-buttons>` is an app page that has a bunch of buttons each of which trigger an
+action on the streamfun action app.
+
+    <streamfun-page-buttons alerts="[[_data]]"></streamfun-page-buttons>
+-->
+<dom-module id="streamfun-page-buttons">
+  <template>
+    <paper-data id="trigger" key="streamfun~triggers"></paper-data>
+    <template is="dom-repeat" items="[[alerts]]">
+      <paper-button on-tap="_updateTrigger">[[item.label]]</paper-button>
+    </template>
+  </template>
+</dom-module>
+<script>
+"use strict";
+  Polymer({
+    is: "streamfun-page-buttons",
+    behaviors: [ Powco.Behavior ],
+    properties: {
+      /**
+       * The list of buttons with coresponding alerts
+       */
+      key: Array,
+    },
+
+    _updateTrigger: function(e) {
+      this.$.trigger.set("data.signal", e.detail.index);
+    },
+  });
+</script>
