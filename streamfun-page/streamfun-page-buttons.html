@@ -16,7 +16,7 @@ action on the streamfun action app.
 -->
 <dom-module id="streamfun-page-buttons">
   <template>
-    <paper-data id="trigger" key="streamfun~triggers"></paper-data>
+    <powco-data id="trigger" key="streamfun~triggers"></powco-data>
     <template is="dom-repeat" items="[[alerts]]">
       <paper-button on-tap="_updateTrigger">[[item.label]]</paper-button>
     </template>
@@ -31,11 +31,11 @@ action on the streamfun action app.
       /**
        * The list of buttons with coresponding alerts
        */
-      key: Array,
+      alerts: Array,
     },
 
     _updateTrigger: function(e) {
-      this.$.trigger.set("data.signal", e.detail.index);
+      this.$.trigger.set("data.signal", e.model.index);
     },
   });
 </script>
