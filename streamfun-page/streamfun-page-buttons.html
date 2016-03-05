@@ -18,7 +18,7 @@ action on the streamfun action app.
   <template>
     <powco-data id="trigger" key="streamfun~triggers"></powco-data>
     <template is="dom-repeat" items="[[alerts]]">
-      <paper-button on-tap="_updateTrigger">[[item.label]]</paper-button>
+      <paper-button raised on-tap="_updateTrigger">[[item.label]]</paper-button>
     </template>
   </template>
 </dom-module>
