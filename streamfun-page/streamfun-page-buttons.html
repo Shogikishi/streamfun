@@ -6,7 +6,7 @@ This code may only be used under the BSD style license found at https://streamfu
 <link rel="import" href="//pcpolymer.firebaseapp.com/bower_components/polymer/polymer.html">
 <link rel="import" href="//powco.firebaseapp.com/powco-data/powco-data.html">
 <link rel="import" href="//pcpolymer.firebaseapp.com/bower_components/paper-button/paper-button.html">
-
+<link rel="import" href="dark-side/dark-side.html">
 <!--
 `<streamfun-page-buttons>` is an app page that has a bunch of buttons each of which trigger an
 action on the streamfun action app.
@@ -15,6 +15,7 @@ action on the streamfun action app.
 -->
 <dom-module id="streamfun-page-buttons">
   <template>
+    <style include="dark-side"></style>
     <powco-data id="trigger" key="streamfun~triggers"></powco-data>
     <template is="dom-repeat" items="[[alerts]]">
       <paper-button raised on-tap="_updateTrigger">[[item.label]]</paper-button>
