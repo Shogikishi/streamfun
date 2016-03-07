@@ -1,0 +1,107 @@
+
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ShogAlert</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+
+    <script>
+    window.onerror = function(msg, url, line) {
+        return false;
+    };
+
+    //function stubs for xsplit beta
+    window.SetVolume = function() {};
+    window.OnSceneLoad = function() {};
+    window.setBackGroundColor = function() {};
+    window.GetPlayState = function() {};
+    window.UpdateLocalProperty = function() {};
+    </script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css">
+    <link rel="stylesheet" href="/styles/alert-box.css">
+    <link rel="stylesheet" href="/styles/text-animations.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.4.0/animate.min.css">
+
+    <script src="//cdn.polyfill.io/v1/polyfill.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/localforage/1.2.3/localforage.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js"></script>
+
+    <link rel="import" href="../bower_components/firebase-element/firebase-document.html">
+    <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script src="/scripts/soundmanager2-nodebug-jsmin.js"></script>
+    <script src="/scripts/custom.js"></script>
+    <script src="/scripts/vendor.min.js"></script>
+    <script src="/scripts/alert-box.min.js"></script>
+     <script>
+         jQuery(document).ready(function ($) {
+             watchSignal();
+         });
+         function watchSignal() {
+             document.getElementById("fbtrigger").addEventListener("data-changed", function () {
+                 var sig = document.getElementById("fbtrigger").data.signal;
+                 if (sig != 0) {
+                     triggerAlert();
+                     config(sig);
+                 }
+             });
+         }
+         function config(signal) {
+             var object = document.getElementById("fbalertdata").data[parseInt(signal - 1)];
+             setImage(object.imageurl);
+             //console.log(object.message + ", " + object.color + ", " + object.size + ", " + object.effect)
+             setMessage(object.message, object.color, object.size, object.effect);
+         }
+         function setImage(val) {
+             $("#alert-image").css('background-image', 'url("' + val + '")');
+         }
+         function setMessage(msg, color, fontsize, effect) {
+             if (msg != null) {
+                 $("#alert-message-text").text(msg);
+                 $("#alert-message-text").css('color', color);
+                 $("#alert-message-text").css('font-size', fontsize + "px");
+                 $("#alert-message-text").attr('class', "animated-letter " + effect);
+             } else
+                $("#alert-message-text").text("");
+         }
+         function triggerAlert() {
+             setTimeout(function () {
+                 $('#topbody').fadeIn(1000).delay(9000).fadeOut(1000);
+                 document.getElementById("fbtrigger").data = { signal: 0 };
+
+             }, 1000);
+         };
+    </script>
+
+</head>
+
+<body id="topbody" class="widget-AlertBox" data-layout="above" style="display:none;">
+    <firebase-document id="fbtrigger" location="https://streamfun.firebaseio.com/triggers">
+    </firebase-document>
+    <firebase-document id="fbalertdata" location="https://streamfun.firebaseio.com/myAlerts/alerts">
+    </firebase-document>
+    <div id="alert-box">
+        <div id="wrap">
+            <div id="alert-image-wrap">
+                <div id="alert-image" style="">
+                </div>
+            </div>
+            <div id="alert-text-wrap">
+                <div id="alert-text">
+                    <div id="alert-message" style="font-size: 28px; color: rgb(255, 255, 255); font-family: Roboto; font-weight: 600;">
+                        <span style="color: rgb(50, 195, 166);">
+                            <span id="alert-message-text" class="animated-letter"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

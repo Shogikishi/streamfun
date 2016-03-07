@@ -1,0 +1,288 @@
+<html><head><link rel="stylesheet" href="/css/animate.all.min.css">
+			<script src="/script/socket.io-1.3.4.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+			<script src="/script/overlay-v1-1.min.js"></script>
+		
+		<!-- http://www.cleancss.com/javascript-minify/ -->
+
+	
+		
+		<style>
+			body {margin: 0;}
+			#alert, #donation, #donation-alert, #follower-alert, #subscriber-alert, #host-alert {z-index: 9001;}
+			#chat {z-index: 9000;}
+					</style>
+
+		
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+		<style>
+			@font-face {
+				font-family: Geomanist-Bold;
+				src: url("/css/fonts/Geomanist-Bold.otf");
+			}
+			@font-face {
+				font-family: Geomanist-Book;
+				src: url("/css/fonts/Geomanist-Book.otf");
+			}
+			@font-face {
+				font-family: Geomanist-Medium;
+				src: url("/css/fonts/Geomanist-Medium.otf");
+			}
+			/*------------------*/
+			::-webkit-scrollbar { visibility: hidden;}
+			
+			input { cursor: pointer; border: 2px dashed #fff; }
+			input:hover { border: 2px dashed #ff00c6; }
+			input:focus { border: 2px dashed #ff00c6; }
+			input:active { border: 2px dashed #ff00c6; }
+			input { outline: none; line-height: 0px; }	
+			
+			body {width: 100%; height: 100%; font-family: 'Geomanist-Bold', sans-serif; font-size: 15px; color: white; background-color: rgba(0, 0, 0, 0); margin: 0px auto;}	
+			/*------------------*/
+			#chat {
+				position: fixed;
+				bottom: 240px;
+				right: 40px;
+				width: 365px;
+				height: 300px;
+				display: none;
+			}
+			#chat .drag {
+				position: absolute;
+				height: 100%;
+				width: 100%;
+			}
+			
+			#chat iframe {
+				width: 100%;
+				height: 100%;
+				border: none;
+			}
+			/*------------------*/
+			#top-bar { position: fixed; top: 0px; font-size: 0;}
+			#top-bar img.background {width: 1920px; height: auto;}
+			
+			#top-bar ul { list-style-type: none; margin: 0; padding: 0; }
+			#top-bar li { position: relative; display: inline-block; }
+			#top-bar #top-left { position: absolute; top: 4px;  }
+			#top-bar #top-right { position: absolute; top: 4px;  right: 0px;}
+			
+			#top-bar #top-left ul.features { text-align: right; }
+			#top-bar ul.features { width:870px;}
+			
+			#top-bar .features .feature-item {
+				width: 440px;
+				height: 60px;
+				background-repeat: no-repeat;
+				margin-right: -5px;
+			}
+			
+			#top-bar .features .feature-item .containing-box {
+				position: absolute;
+				top: 20px;
+				left: 122px;
+				width: 290px;
+				text-align:left;
+				overflow: hidden;
+			}
+			#top-bar .features .feature-item .containing-box .b-text { white-space:nowrap; font-size: 16px; font-family: 'Geomanist-Medium'; color: rgba(255,255,255,0.7); }
+			
+			#top-bar .followers-bg { background-image: url('/img/division/followers-bg.png'); }
+			#top-bar .follower-bg { background-image: url('/img/division/follower-bg.png'); }
+			#top-bar .subscribers-bg { background-image: url('/img/division/subscribers-bg.png'); }
+			#top-bar .subscriber-bg { background-image: url('/img/division/subscriber-bg.png'); }
+			#top-bar .donation-bg { background-image: url('/img/division/donation-bg.png'); }
+			#top-bar .donations-bg { background-image: url('/img/division/donations-bg.png'); }
+			#top-bar .latest-donation-bg { background-image: url('/img/division/latest-donation-bg.png'); }
+			/*------------------*/
+			#social-bar { position: fixed; text-align: left; top: 150px; left: 10px; width:241px;}
+			#social-bar ul { list-style-type: none; margin: 0px; padding: 0px; }
+			#social-bar li { background-image: url('/img/division/social-bg.png'); width: 241px; height: 36px; margin-bottom: 3px;}
+			
+			#social-bar .social-handle { position: relative; top: 0px; left:17px; width:180px; font-size: 14px; font-family: 'Geomanist-Book'; color: #ffffff; display: inline-block;}
+			#social-bar .social-icon { display: inline-block; margin-left: 11px; margin-top: 12px;  }
+			/*------------------*/
+			#webcam {position: fixed; right: 50px; top: 700px; text-align: center;}
+			
+			#webcam .web-4 {width: 363px; height: auto;}
+			#webcam .web-16 {display: none; width: 412px; height: auto;}
+			
+			#webcam .name { position: relative; top: 18px; font-family: 'Geomanist-Bold'; font-size: 22px; color: #ff5b00; text-align: center;}
+			
+			#webcam #webcam-name {
+				position: relative;
+				top: -26px;
+				width: 399px;
+				height: 58px;
+				background-image: url('/img/division/web-name.png');
+				background-repeat: no-repeat;
+			}
+			
+			#webcam #webcam-name.web16 { left: 10px; }
+			#webcam #webcam-name.web4 { left: 3px; }
+			/*------------------*/
+			#alert, #host-alert {
+				position: fixed;
+				top: 150px;
+				left: 50%;
+				margin-left: -350.5px;
+				display: none;
+			}
+			#alert img, #host-alert img {width: 100%; height: auto;}
+			#alert p.first-line, #host-alert p.first-line {
+				font-family: 'Geomanist-Bold';
+				position: absolute;
+				width: 86%;
+				text-align: center;
+				margin: 0;
+				top: 14px;
+				left: 85px;
+				font-size:22px;
+				white-space: nowrap;
+				overflow: hidden;
+				font-weight: bold;
+			}
+			#alert p.second-line, #host-alert p.second-line {
+				position: absolute;
+				font-family: 'Geomanist-Book';
+				width: 86%;
+				text-align: center;
+				margin: 0;
+				top: 43px;
+				left: 85px;
+				white-space: nowrap;
+				overflow: hidden;
+				font-size: 17px;
+			}
+			/*------------------*/
+			#donation {
+				position: fixed;
+				top: 150px;
+				left: 50%;
+				margin-left: -415px;
+				display: none;
+			}
+			#donation img {width: 100%; height: auto;}
+			#donation p.first-line {
+				font-family: 'Geomanist-Bold';
+				position: absolute;
+				width: 84.5%;
+				text-align: center;
+				margin: 0;
+				font-size: 23px;
+				top: 25px;
+				left: 110px;
+				text-transform: uppercase;
+				overflow-y: hidden;
+				white-space: nowrap;
+			}
+			#donation .donation-container {
+				position: absolute;
+				top: 75px;
+				min-height: 70px;
+				max-height: 70px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 75%;
+				left: 107px;
+				overflow-y: hidden;
+			}
+			#donation p.second-line {
+				font-family: 'Geomanist-Bold';
+				text-align: center;
+				font-size: 17px;
+				margin: 0;
+			}
+			/*------------------*/
+			#input-social-1, #input-social-2, #input-social-3, #input-social-4 { color: #fff; width: 100%; background: none; font-size: 14px; font-family: 'Geomanist-Book', sans-serif;}
+			#input-title { color: #ff5b00; width: 80%; background: none; font-size: 22px; font-family: 'Geomanist-Bold', sans-serif; text-align: center; }
+		</style>
+		<script>
+			var train_avail = false;
+			var bar_align = "left";
+		</script>
+	</head>
+	<body>		<div id="save-area">
+			<div id="save-area">
+
+	<div id="alert" class="animated bounce" data-follower-enabled="1" data-follower-line1="{name} JUST FOLLOWED!" data-follower-line2="YOU ROCK!!" data-follower-duration="5" data-follower-delay="5" data-follower-colour-default="#ff5b00" data-follower-colour="#ff5b00" data-follower-animation="" data-follower-sound="Mystery Accents" data-follower-volume="100" data-subscriber-enabled="1" data-subscriber-line1="{name} JUST SUBSCRIBED!" data-subscriber-line2="THANKS FOR SUBBING!" data-subscriber-duration="5" data-subscriber-delay="5" data-subscriber-colour-default="#ff5b00" data-subscriber-colour="#ff5b00" data-subscriber-animation="" data-subscriber-sound="" data-subscriber-volume="100" data-subscriber-sounds-tiered="">
+		<p class="first-line"></p>
+		<p class="second-line"></p>
+		<img src="/img/division/alert.png"></div>
+	<div id="host-alert" class="animated bounce" data-host-enabled="1" data-host-line1="{host} IS NOW HOSTING YOU!" data-host-line2="{viewers} VIEWERS JUST JOINED THE STREAM!" data-host-duration="5" data-host-delay="5" data-host-viewers-colour-default="#fff" data-host-viewers-colour="#fff" data-host-colour-default="#ff5b00" data-host-colour="#ff5b00" data-host-viewers-minimum="0" data-host-animation="" data-host-viewers-animation="" data-host-sound="" data-host-volume="100">
+		<p class="first-line"></p>
+		<p class="second-line"></p>
+		<img src="/img/division/host-alert.png"></div>
+	
+	<div id="donation" class="animated bounce" data-donation-enabled="1" data-donation-line1="{name} JUST DONATED {amount}!" data-donation-duration="5" data-donation-delay="5" data-minimum-amount="0" data-donator-colour-default="#ff5b00" data-donator-colour="#ff5b00" data-donator-animation="" data-donation-amount-colour-default="#fff" data-donation-amount-colour="#fff" data-donation-amount-animation="" data-donation-sound="" data-donation-volume="100" data-donation-tts="" data-donation-sounds-tiered="">
+		<p class="first-line"></p>
+		<div class="donation-container">
+			<p class="second-line"></p>
+		</div>
+		<img src="/img/division/donation.png"></div><div id="chat" data-bottom="240" data-right="40" style="display: none;"><div class="drag"></div><iframe name="chat" data-theme="none" src="//www.nightdev.com/hosted/obschat/?theme=none&amp;channel=shogikishi&amp;fade=false&amp;bot_activity=false"></iframe></div>
+
+	<div id="webcam" data-top="150" data-right="50" style="width: 363px; height: 292px;">
+		<img class="web-16 webcam" src="/img/division/web-16.png" data-width="412" data-height="251" data-camera-width="390" data-camera-height="215" data-x-offset="14" data-y-offset="14" style="display: none;"><img class="web-4 webcam" src="/img/division/web-4b.png" data-width="363" data-height="292" data-camera-width="340" data-camera-height="256" data-x-offset="15" data-y-offset="14" style="display: inline;"><div id="webcam-name" class="web4" style="display: none;">
+			<div class="name">
+				<input class="input" type="text" id="input-title" value="EXAMPLE" style="display: none;"><span id="output-title" class="output" style="display: initial;">STREXM</span>
+			</div>
+		</div>
+	</div>
+
+	<div id="social-bar" style="display: none;">
+		<ul><li class="social-item social-1" data-type="hide" style="display: none;">
+				<div class="social-icon"><i class="fa fa-twitter fa-fw"></i></div>
+				<div class="social-handle">
+					<input class="input" type="text" id="input-social-1" value="EXAMPLE" style="display: none;"><span id="output-social-1" class="output" style="display: initial;">shogikishi</span>
+				</div>
+			</li>
+			<li class="social-item social-2" data-type="youtube-play">
+				<div class="social-icon"><i class="fa fa-youtube-play fa-fw"></i></div>
+				<div class="social-handle">
+					<input class="input" type="text" id="input-social-2" value="shogikishi" style="display: none;"><span id="output-social-2" class="output" style="display: initial;">shogikishi</span>
+				</div>
+			</li>
+			<li class="social-item social-3" data-type="hide" style="display: none;">
+				<div class="social-icon"><i class="fa fa-facebook fa-fw"></i></div>
+				<div class="social-handle">
+					<input class="input" type="text" id="input-social-3" value="EXAMPLE" style="display: none;"><span id="output-social-3" class="output" style="display: initial;">shogikishi</span>
+				</div>
+			</li>
+			<li class="social-item social-4" data-type="hide" style="">
+				<div class="social-icon"><i class="fa fa-instagram fa-fw"></i></div>
+				<div class="social-handle">
+					<input class="input" type="text" id="input-social-4" value="EXAMPLE" style="display: none;"><span id="output-social-4" class="output" style="display: initial;">shogikishi</span>
+				</div>
+			</li>
+		</ul></div>
+	
+	<div id="top-bar" style="display: block;">
+		<div id="top-left">
+			<ul class="features"><li class="feature-item item-1 follower-bg" data-output="follower">
+					<div class="containing-box" style="overflow: hidden;">
+						<div class="follower b-text animated flipInX" data-timescale="all" style="white-space: nowrap; margin: 0px;"></div>
+					</div>
+				</li>
+				<li class="feature-item item-2 donation-bg" data-output="hide" style="display: none;">
+					<div class="containing-box">
+						<div class="donation b-text animated flipInX" data-timescale="all"></div>
+					</div>
+				</li>
+			</ul></div>
+		<div id="top-right">
+			<ul class="features"><li class="feature-item item-3 followers-bg" data-output="followers">
+					<div class="containing-box" style="overflow: hidden;">
+						<div class="followers b-text animated flipInX" data-timescale="all" style="white-space: nowrap; margin: 0px; display: block;"></div>
+					</div>
+				</li>
+				<li class="feature-item item-4 donation-bg" data-output="donation" style="">
+					<div class="containing-box">
+						<div class="b-text animated flipInX donation" data-timescale="all"></div>
+					</div>
+				</li>
+			</ul></div>
+	<img class="background" src="/img/division/top-bar.png"></div>
+</div>
+		</div>
+</body></html>
