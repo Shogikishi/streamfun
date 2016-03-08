@@ -1,11 +1,11 @@
-
+﻿
 <!doctype html>
 <html class="no-js" lang="">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>ShogAlert</title>
+    <title>StreamAlert</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="referrer" content="no-referrer">
@@ -24,20 +24,20 @@
     </script>
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css">
-    <link rel="stylesheet" href="/styles/alert-box.css">
-    <link rel="stylesheet" href="/styles/text-animations.css">
+    <link rel="stylesheet" href="/css/alert-box.css">
+    <link rel="stylesheet" href="/css/text-animations.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.4.0/animate.min.css">
 
     <script src="//cdn.polyfill.io/v1/polyfill.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/localforage/1.2.3/localforage.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js"></script>
 
-    <link rel="import" href="../bower_components/firebase-element/firebase-document.html">
+    <!-- <link rel="import" href="../bower_components/firebase-element/firebase-document.html">-->
     <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
-    <script src="/scripts/soundmanager2-nodebug-jsmin.js"></script>
-    <script src="/scripts/custom.js"></script>
-    <script src="/scripts/vendor.min.js"></script>
-    <script src="/scripts/alert-box.min.js"></script>
+    <script src="/script/soundmanager2-nodebug-jsmin.js"></script>
+    <script src="/script/custom.js"></script>
+    <script src="/script/vendor.min.js"></script>
+    <script src="/script/alert-box.min.js"></script>
      <script>
          jQuery(document).ready(function ($) {
              watchSignal();
@@ -45,14 +45,12 @@
          function watchSignal() {
              document.getElementById("fbtrigger").addEventListener("data-changed", function () {
                  var sig = document.getElementById("fbtrigger").data.signal;
-                 if (sig != 0) {
-                     triggerAlert();
-                     config(sig);
-                 }
+                 config(sig);
+                 triggerAlert();
              });
          }
          function config(signal) {
-             var object = document.getElementById("fbalertdata").data[parseInt(signal - 1)];
+             var object = document.getElementById("fbalertdata").data[parseInt(signal)];
              setImage(object.imageurl);
              //console.log(object.message + ", " + object.color + ", " + object.size + ", " + object.effect)
              setMessage(object.message, object.color, object.size, object.effect);
@@ -72,7 +70,7 @@
          function triggerAlert() {
              setTimeout(function () {
                  $('#topbody').fadeIn(1000).delay(9000).fadeOut(1000);
-                 document.getElementById("fbtrigger").data = { signal: 0 };
+                // document.getElementById("fbtrigger").data = { signal: 0 };
 
              }, 1000);
          };
